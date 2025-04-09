@@ -1,0 +1,7 @@
+/log/*
+!/log/.keep
+/tmp
+*.db
+*.exe
+*.log
+.DS_Store
