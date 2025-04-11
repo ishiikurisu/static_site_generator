@@ -1,7 +1,17 @@
+##########
+# GOLANG #
+##########
 /log/*
 !/log/.keep
 /tmp
 *.db
 *.exe
 *.log
+
+####################
+# PROJECT SPECIFIC #
+####################
 .DS_Store
+template/
+output/
+
