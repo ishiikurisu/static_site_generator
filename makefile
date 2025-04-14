@@ -3,7 +3,7 @@ default: build
 
 .PHONY: build
 build:
-	go build -o static_site_generator.exe main.go
+	go build -o build_notes.exe main/main.go
 
 .PHONY: clean
 clean:

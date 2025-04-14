@@ -1,4 +1,4 @@
-module crisjr.eng.br/notes/build_notes
+module gitlab.com/crisjr/static_site_generator
 
 go 1.23.2
 
