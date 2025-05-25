@@ -9,3 +9,7 @@ build:
 clean:
 	rm *.exe
 
+.PHONY: quick_test
+quick_test: build
+	./build_notes.exe tmp/notes tmp/output
+
