@@ -26,6 +26,7 @@ type Note struct {
 	Path            string `json:"path"`
 	CreationDate    string `json:"creation_date"`
 	LastUpdatedDate string `json:"last_updated_date"`
+	OriginalDate    string `json:"original_date"`
 }
 
 type RenderedNote struct {
@@ -250,9 +251,15 @@ func renderIndex(outputFolder string, notes []Note, indexTemplate, indexNoteTemp
 	var noteIndexHtmlBuilder strings.Builder 
 	for _, note := range notes {
 		var dateLabelBuilder strings.Builder
+		var fromDate string = note.OriginalDate
+
+		if fromDate == "" {
+			fromDate = note.CreationDate
+		}
+
 		dateLabelBuilder.WriteString("<p> 🆕 ")
-		dateLabelBuilder.WriteString(formatDate(note.CreationDate))
-		if note.CreationDate != note.LastUpdatedDate {
+		dateLabelBuilder.WriteString(formatDate(fromDate))
+		if fromDate != note.LastUpdatedDate {
 			dateLabelBuilder.WriteString(" ➕ ")
 			dateLabelBuilder.WriteString(formatDate(note.LastUpdatedDate))
 		}
