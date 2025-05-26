@@ -175,6 +175,9 @@ func filePathToHtml(path string) string {
 	if strings.HasSuffix(path, "map_data.json") {
 		return fmt.Sprintf("/util/map?mapdataurl=/maps/map_data/%s", path)
 	}
+	if strings.HasSuffix(path, "map_data.geojson") {
+		return fmt.Sprintf("/util/map?mapdataurl=/maps/map_data/%s", path)
+	}
 
 	// regular cases
 	possibleSuffixes := []string{".md", ".gmi", ".csv"}
