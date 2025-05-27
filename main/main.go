@@ -9,10 +9,10 @@ import (
 	"strings"
 	"time"
 
+	"git.sr.ht/~m15o/gmi2html"
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"
-	"git.sr.ht/~m15o/gmi2html"
 )
 
 /* #################
@@ -86,7 +86,7 @@ func getTemplate(filename string) string {
 
 func readNote(inputFolder, filename string) ([]byte, error) {
 	filepath := fmt.Sprintf("./%s/%s", inputFolder, filename)
-	bytes, err := ioutil.ReadFile(filepath) 
+	bytes, err := ioutil.ReadFile(filepath)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +99,7 @@ func getNotes(inputFolder string) ([]Note, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	var noteIndex []Note
 	err = json.Unmarshal(bytes, &noteIndex)
 	if err != nil {
@@ -111,7 +111,7 @@ func getNotes(inputFolder string) ([]Note, error) {
 
 func createFolderForFile(filepath string) error {
 	parts := strings.Split(filepath, "/")
-	usableParts := parts[0:len(parts)-1]
+	usableParts := parts[0 : len(parts)-1]
 	dirpath := strings.Join(usableParts, "/")
 	return os.MkdirAll(dirpath, os.ModePerm)
 }
@@ -162,8 +162,8 @@ func renderNote(
 	}
 
 	// generating summary of results
-	renderedNote := RenderedNote {
-		Path: htmlPath,
+	renderedNote := RenderedNote{
+		Path:     htmlPath,
 		Contents: contents,
 	}
 
@@ -212,7 +212,7 @@ func renderGemini(gmi string) string {
 
 func renderCsv(rawCsv string) string {
 	// TODO properly render CSV file
-	var outlet strings.Builder 
+	var outlet strings.Builder
 	isHeader := true
 	lines := strings.Split(rawCsv, "\n")
 
@@ -235,7 +235,7 @@ func renderCsv(rawCsv string) string {
 			outlet.WriteString(field)
 			outlet.WriteString(cellClose)
 		}
-		outlet.WriteString("</tr>")	
+		outlet.WriteString("</tr>")
 	}
 
 	outlet.WriteString("</table>")
@@ -251,7 +251,7 @@ func renderIndex(outputFolder string, notes []Note, indexTemplate, indexNoteTemp
 	}
 	defer fp.Close()
 
-	var noteIndexHtmlBuilder strings.Builder 
+	var noteIndexHtmlBuilder strings.Builder
 	for _, note := range notes {
 		var dateLabelBuilder strings.Builder
 		var fromDate string = note.OriginalDate
@@ -276,7 +276,7 @@ func renderIndex(outputFolder string, notes []Note, indexTemplate, indexNoteTemp
 	}
 
 	indexHtml := strings.ReplaceAll(indexTemplate, "{{content}}", noteIndexHtmlBuilder.String())
-	_, err = fp.WriteString(indexHtml)	
+	_, err = fp.WriteString(indexHtml)
 	if err != nil {
 		return err
 	}
@@ -308,9 +308,9 @@ func (sorter *noteSorter) Less(i, j int) bool {
 }
 
 func (by By) Sort(notes []Note) {
-	sorter := &noteSorter {
+	sorter := &noteSorter{
 		notes: notes,
-		by: by,
+		by:    by,
 	}
 	sort.Sort(sorter)
 }
@@ -375,7 +375,7 @@ func adaptNoteForRssFeed(inlet string) string {
 }
 
 func renderRssFeed(
-	outputFolder string, 
+	outputFolder string,
 	notes []Note,
 	renderedNotes map[string]*RenderedNote,
 ) error {
@@ -386,7 +386,7 @@ func renderRssFeed(
 	}
 	defer fp.Close()
 
-	var builder strings.Builder 
+	var builder strings.Builder
 	now := time.Now().String()
 
 	builder.WriteString(`<?xml version="1.0" encoding="UTF-8" ?>`)
@@ -422,4 +422,3 @@ func renderRssFeed(
 
 	return nil
 }
-
