@@ -35,6 +35,7 @@ type RenderedNote struct {
 }
 
 func main() {
+	// parsing args
 	inputFolder := os.Args[1]
 	outputFolder := os.Args[2]
 	noteIndex, err := getNotes(inputFolder)
@@ -42,6 +43,10 @@ func main() {
 		panic(err)
 	}
 
+	// preparing data for rendering
+	newLinks := generateNewLinks(noteIndex)
+
+	// rendering notes
 	var notesToIndex []Note
 	noteTemplate := getTemplate("note.template.html")
 	renderedNotes := make(map[string]*RenderedNote)
@@ -51,6 +56,7 @@ func main() {
 			outputFolder,
 			note,
 			noteTemplate,
+			newLinks,
 		)
 		if err != nil {
 			fmt.Printf("error for '%s': %s\n", note.Path, err)
@@ -60,6 +66,7 @@ func main() {
 		}
 	}
 
+	// rendering index
 	indexTemplate := getTemplate("index.template.html")
 	indexNoteTemplate := getTemplate("index.post.template.html")
 	err = renderIndex(outputFolder, notesToIndex, indexTemplate, indexNoteTemplate)
@@ -67,8 +74,37 @@ func main() {
 		panic(err)
 	}
 
+	// rendering rss feed
 	notesToFeed := take(selectRssFeedNotes(notesToIndex), 20)
 	renderRssFeed(outputFolder, notesToFeed, renderedNotes)
+}
+
+/* ##########################
+   # LINK REDIRECTION LOGIC #
+   ########################## */
+
+func generateNewLinks(noteIndex []Note) map[string]string {
+	template := "href=\"./%s\""
+	newLinks := make(map[string]string)
+
+	for _, note := range noteIndex {
+		fromLink := fmt.Sprintf(template, note.Path)
+		toLink := fmt.Sprintf(template, filePathToHtml(note.Path))
+		newLinks[fromLink] = toLink
+	}
+
+	return newLinks
+}
+
+// inlet should be the generated HTML string
+func replaceInternalLinks(inlet string, newLinks map[string]string) string {
+	outlet := inlet
+
+	for fromLink, toLink := range newLinks {
+		outlet = strings.ReplaceAll(outlet, fromLink, toLink)
+	}
+
+	return outlet
 }
 
 /* ##########################
@@ -121,6 +157,7 @@ func renderNote(
 	outputFolder string,
 	note Note,
 	noteTemplate string,
+	newLinks map[string]string,
 ) (*RenderedNote, error) {
 	// loading note data
 	bodyBytes, err := readNote(inputFolder, note.Path)
@@ -156,7 +193,10 @@ func renderNote(
 	}
 	defer fp.Close()
 
-	_, err = fp.WriteString(output)
+	_, err = fp.WriteString(replaceInternalLinks(
+		output,
+		newLinks,
+	))
 	if err != nil {
 		return nil, err
 	}
