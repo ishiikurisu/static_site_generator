@@ -13,3 +13,7 @@ clean:
 quick_test: build
 	./build_notes.exe tmp/notes tmp/output
 
+.PHONY: publish
+publish:
+	sh cross-compile.sh
+
