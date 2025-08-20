@@ -293,25 +293,11 @@ func renderIndex(outputFolder string, notes []Note, indexTemplate, indexNoteTemp
 
 	var noteIndexHtmlBuilder strings.Builder
 	for _, note := range notes {
-		var dateLabelBuilder strings.Builder
-		var fromDate string = note.OriginalDate
-
-		if fromDate == "" {
-			fromDate = note.CreationDate
-		}
-
-		dateLabelBuilder.WriteString("<p> 🆕 ")
-		dateLabelBuilder.WriteString(formatDate(fromDate))
-		if fromDate != note.LastUpdatedDate {
-			dateLabelBuilder.WriteString(" ➕ ")
-			dateLabelBuilder.WriteString(formatDate(note.LastUpdatedDate))
-		}
-		dateLabelBuilder.WriteString("</p>")
-
 		noteIndexHtml := strings.ReplaceAll(indexNoteTemplate, "{{path}}", filePathToHtml(note.Path))
 		noteIndexHtml = strings.ReplaceAll(noteIndexHtml, "{{description}}", note.Description)
 		noteIndexHtml = strings.ReplaceAll(noteIndexHtml, "{{title}}", note.Title)
-		noteIndexHtml = strings.ReplaceAll(noteIndexHtml, "{{dateLabel}}", dateLabelBuilder.String())
+		noteIndexHtml = strings.ReplaceAll(noteIndexHtml, "{{dateLabel}}", buildDateLabel(note))
+		noteIndexHtml = strings.ReplaceAll(noteIndexHtml, "{{language}}", buildLanguageLabel(note))
 		noteIndexHtmlBuilder.WriteString(noteIndexHtml)
 	}
 
@@ -322,6 +308,46 @@ func renderIndex(outputFolder string, notes []Note, indexTemplate, indexNoteTemp
 	}
 
 	return nil
+}
+
+func buildDateLabel(note Note) string {
+	var dateLabelBuilder strings.Builder
+	var fromDate string = note.OriginalDate
+
+	if fromDate == "" {
+		fromDate = note.CreationDate
+	}
+
+	dateLabelBuilder.WriteString("<p> 🆕 ")
+	dateLabelBuilder.WriteString(formatDate(fromDate))
+	if fromDate != note.LastUpdatedDate {
+		dateLabelBuilder.WriteString(" ➕ ")
+		dateLabelBuilder.WriteString(formatDate(note.LastUpdatedDate))
+	}
+	dateLabelBuilder.WriteString("</p>")
+
+	return dateLabelBuilder.String()
+}
+
+func buildLanguageLabel(note Note) string {
+	flagEmoji := ""
+
+	switch note.Language {
+	case "en":
+		flagEmoji = "🇬🇧"
+	case "pt-br":
+		flagEmoji = "🇧🇷"
+	case "ja":
+		flagEmoji = "🇯🇵"
+	case "de":
+		flagEmoji = "🇩🇪"
+	}
+
+	if flagEmoji == "" {
+		return ""
+	}
+
+	return fmt.Sprintf("<p>%s</p>", flagEmoji)
 }
 
 /* ####################################
@@ -401,7 +427,7 @@ func formatDate(rawDate string) string {
 }
 
 func adaptNoteForRssFeed(inlet string) string {
-	// TODO make this more geeneric?
+	// TODO make this more generic?
 	outlet := strings.ReplaceAll(
 		inlet,
 		"src=\"./",
