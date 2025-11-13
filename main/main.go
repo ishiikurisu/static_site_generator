@@ -318,13 +318,13 @@ func buildDateLabel(note Note) string {
 		fromDate = note.CreationDate
 	}
 
-	dateLabelBuilder.WriteString("<p> 🆕 ")
+	dateLabelBuilder.WriteString("<span> 🆕 ")
 	dateLabelBuilder.WriteString(formatDate(fromDate))
 	if fromDate != note.LastUpdatedDate {
 		dateLabelBuilder.WriteString(" ➕ ")
 		dateLabelBuilder.WriteString(formatDate(note.LastUpdatedDate))
 	}
-	dateLabelBuilder.WriteString("</p>")
+	dateLabelBuilder.WriteString("</span>")
 
 	return dateLabelBuilder.String()
 }
@@ -347,7 +347,7 @@ func buildLanguageLabel(note Note) string {
 		return ""
 	}
 
-	return fmt.Sprintf("<p>%s</p>", flagEmoji)
+	return fmt.Sprintf("<span>%s</span>", flagEmoji)
 }
 
 /* ####################################
