@@ -1,17 +1,13 @@
-##########
-# GOLANG #
-##########
-/log/*
-!/log/.keep
-/tmp
-*.db
-*.exe
-*.log
-
-####################
-# PROJECT SPECIFIC #
-####################
-.DS_Store
-template/
-output/
-
+/target
+/classes
+/checkouts
+profiles.clj
+pom.xml
+pom.xml.asc
+*.jar
+*.class
+/.lein-*
+/.nrepl-port
+/.prepl-port
+.hgignore
+.hg/
