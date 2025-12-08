@@ -11,7 +11,7 @@ clean:
 
 .PHONY: test
 test:
-	echo "TODO"
+	lein test
 
 .PHONY: publish
 publish:
