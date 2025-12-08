@@ -2,18 +2,22 @@
 default: build
 
 .PHONY: build
-build:
-	go build -o build_notes.exe main/main.go
+build: test
+	echo "TODO"
 
 .PHONY: clean
 clean:
-	rm *.exe
+	echo "TODO"
 
-.PHONY: quick_test
-quick_test: build
-	./build_notes.exe tmp/notes tmp/output
+.PHONY: test
+test:
+	echo "TODO"
 
 .PHONY: publish
 publish:
-	sh cross-compile.sh
+	echo "TODO"
+
+.PHONY: repl
+repl:
+	lein repl :start :port 40000
 
