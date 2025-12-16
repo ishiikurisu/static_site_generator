@@ -12,19 +12,19 @@
         templates-directory (get args "-t")
         output-directory (get args "-o" ".")]
     (cond
-      (nil? input-directory)
+      (nil? input-repository)
         (println "Error: no input repository set")
       (nil? templates-directory)
         (println "Error: no templates directory set")
       :else
         (wiki/generate input-repository
-                       templates-folder
+                       templates-directory
                        output-directory))))
 
 (defn -main [& argv]
   (let [args (cli/parse argv)
         tool (get args "tool" "")]
     (cond
-      cond (= tool "wiki") (run-wiki args)
+      (= tool "wiki") (run-wiki args)
       :else (println (str "Unknown command " tool)))))
 
