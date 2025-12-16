@@ -3,7 +3,7 @@ default: build
 
 .PHONY: build
 build: test
-	echo "TODO"
+	echo "TODO"]
 
 .PHONY: clean
 clean:

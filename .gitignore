@@ -1,3 +1,12 @@
+####################
+# PROJECT-SPECIFIC #
+####################
+/resources/test_repo/
+/resources/test_output/
+
+###########
+# CLOJURE #
+###########
 /target
 /classes
 /checkouts
