@@ -18,3 +18,11 @@
   (-> (str pwd "/" path)
       slurp))
 
+(defn render-md [from]
+  ;; TODO complete me!
+  from)
+
+(defn render-csv [from]
+  ;; TODO complete me!
+  from)
+

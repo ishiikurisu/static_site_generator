@@ -1,13 +1,22 @@
 (ns br.eng.crisjr.static-site-generator.wiki
-  (:require [br.eng.crisjr.commons.utils :as utils]))
+  (:require [clojure.string :as str]
+            [br.eng.crisjr.commons.utils :as utils]))
 
 (defn get-new-path [from]
+  (str/replace from #"\.md|\.csv$" ".html"))
+
+(defn populate-template [template contents]
   ;; TODO complete me!
-  from)
+  contents)
 
 (defn generate-content [template input-dir note]
-  ;; TODO complete me!
-  "")
+  (let [path (get note "path")
+        post (utils/load-post input-dir path)]
+    (->> (cond
+           (str/ends-with? path ".md") (utils/render-md post)
+           (str/ends-with? path ".csv") (utils/render-csv post)
+           :else post)
+         (populate-template template))))
 
 (defn render-note [template note input-dir output-dir]
   (try
@@ -16,7 +25,9 @@
             (generate-content template input-dir note))
       true)
     (catch Exception e
-      false)))
+      (do
+        (println e)
+        false))))
 
 (defn render-notes
   [index templates input-dir output-dir]
