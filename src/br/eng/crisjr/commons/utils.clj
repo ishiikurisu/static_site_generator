@@ -1,5 +1,8 @@
 (ns br.eng.crisjr.commons.utils
-  (:require [clojure.data.json :as json]))
+  (:require [clojure.string :as str]
+            [clojure.data.json :as json]
+            [br.bsb.liberdade.strint :refer [strint]]
+            [markdown.core :refer [md-to-html-string]]))
 
 (defn load-index [pwd]
   (-> (str pwd "/index.blog.json")
@@ -18,11 +21,34 @@
   (-> (str pwd "/" path)
       slurp))
 
-(defn render-md [from]
-  ;; TODO complete me!
-  from)
+(def render-md md-to-html-string)
+
+(defn- csv-row-to-html [row tag]
+  (str "<tr>"
+       (->> (map #(strint "<%{tag}>%{it}</%{tag}>"
+                          {"tag" tag
+                           "it" %})
+                 row)
+            (apply str))
+       "</tr>"))
 
 (defn render-csv [from]
-  ;; TODO complete me!
-  from)
+  (let [table (->> (str/split from #"\n")
+                   (map #(str/split % #",")))]
+    (loop [head (first table)
+           tail (rest table)
+           outlet "<table>"
+           first-line? true]
+      (if (nil? head)
+        (str outlet "</table>")
+        (recur (first tail)
+               (rest tail)
+               (if (-> head count zero?)
+                  outlet
+                  (str outlet
+                       (csv-row-to-html head
+                                        (if first-line?
+                                          "th"
+                                          "td"))))
+               false)))))
 

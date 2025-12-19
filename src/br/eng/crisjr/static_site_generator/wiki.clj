@@ -1,13 +1,13 @@
 (ns br.eng.crisjr.static-site-generator.wiki
   (:require [clojure.string :as str]
+            [br.bsb.liberdade.strint :refer [strint]]
             [br.eng.crisjr.commons.utils :as utils]))
 
 (defn get-new-path [from]
   (str/replace from #"\.md|\.csv$" ".html"))
 
-(defn populate-template [template contents]
-  ;; TODO complete me!
-  contents)
+(defn populate-template [template content]
+  (strint template {"content" content}))
 
 (defn generate-content [template input-dir note]
   (let [path (get note "path")
