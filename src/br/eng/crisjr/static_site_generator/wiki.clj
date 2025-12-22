@@ -6,23 +6,23 @@
 (defn get-new-path [from]
   (str/replace from #"\.md|\.csv$" ".html"))
 
-(defn populate-template [template content]
+(defn- populate-template-content [template content]
   (strint template {"content" content}))
 
-(defn generate-content [template input-dir note]
+(defn- generate-note-content [template input-dir note]
   (let [path (get note "path")
         post (utils/load-post input-dir path)]
     (->> (cond
            (str/ends-with? path ".md") (utils/render-md post)
            (str/ends-with? path ".csv") (utils/render-csv post)
            :else post)
-         (populate-template template))))
+         (populate-template-content template))))
 
-(defn render-note [template note input-dir output-dir]
+(defn- render-note [template note input-dir output-dir]
   (try
     (do
       (spit (str output-dir "/" (-> note (get "path") get-new-path))
-            (generate-content template input-dir note))
+            (generate-note-content template input-dir note))
       true)
     (catch Exception e
       (do
@@ -41,9 +41,21 @@
           []
           index))
 
+(defn- populate-index-post-template [template note]
+  (strint template
+          {"path" (get-new-path (get note "path"))
+           "title" (get note "title")}))
+
+(defn- build-index-contents [template notes]
+  (->> (map #(populate-index-post-template template %) notes)
+       (reduce str "")))
+
 (defn render-index [index templates notes output-directory]
-  ;; TODO complete me!
-  )
+  (let [index-contents (build-index-contents (:index-post templates)
+                                             notes)]
+    (spit (str output-directory "/index.html")
+          (populate-template-content (:index templates)
+                                     index-contents))))
 
 (defn generate [input-repository templates-repository output-directory]
   (let [index (utils/load-index input-repository)
