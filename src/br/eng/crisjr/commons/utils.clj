@@ -52,3 +52,16 @@
                                           "td"))))
                false)))))
 
+(defn get-render-fn [path]
+  (cond
+    (str/ends-with? path ".md") render-md
+    (str/ends-with? path ".csv") render-csv 
+    :else identity))
+
+(defn get-new-path [from]
+  (str/replace from #"\.md|\.csv$" ".html"))
+
+(defn spy [it]
+  (clojure.pprint/pprint it)
+  it)
+

@@ -3,25 +3,21 @@
             [br.bsb.liberdade.strint :refer [strint]]
             [br.eng.crisjr.commons.utils :as utils]))
 
-(defn get-new-path [from]
-  (str/replace from #"\.md|\.csv$" ".html"))
-
 (defn- populate-template-content [template content]
   (strint template {"content" content}))
 
 (defn- generate-note-content [template input-dir note]
   (let [path (get note "path")
-        post (utils/load-post input-dir path)]
-    (->> (cond
-           (str/ends-with? path ".md") (utils/render-md post)
-           (str/ends-with? path ".csv") (utils/render-csv post)
-           :else post)
+        post (utils/load-post input-dir path)
+        render-fn (utils/get-render-fn path)]
+    (->> (render-fn post)
          (populate-template-content template))))
 
 (defn- render-note [template note input-dir output-dir]
   (try
     (do
-      (spit (str output-dir "/" (-> note (get "path") get-new-path))
+      (spit (str output-dir "/" (-> (get "path" note)
+                                    utils/get-new-path))
             (generate-note-content template input-dir note))
       true)
     (catch Exception e
@@ -43,7 +39,7 @@
 
 (defn- populate-index-post-template [template note]
   (strint template
-          {"path" (get-new-path (get note "path"))
+          {"path" (utils/get-new-path (get note "path"))
            "title" (get note "title")}))
 
 (defn- build-index-contents [template notes]
