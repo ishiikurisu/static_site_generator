@@ -1,6 +1,7 @@
 (ns br.eng.crisjr.static-site-generator.rss
   (:require [clojure.string :as str]
-            [br.eng.crisjr.commons.utils :as utils]))
+            [br.eng.crisjr.commons.utils :as utils])
+  (:import java.time.LocalDateTime))
 
 (defn- get-note-url [url path]
   (str url "/" path))
@@ -21,11 +22,28 @@
                 "path" (->> (utils/get-new-path path)
                             (get-note-url url)))))
 
+(defn- render-rss-entry [note]
+  (str "<item>"
+       "<title>" (get note "title") "</title>"
+       "<link>" (get note "path") "</link>"
+       "<description>" (get note "content") "</description>"
+       "<pubDate>" (get note "last_updated_date") "</pubDate>"
+       "</item>"))
+
 (defn- build-feed [url notes]
-  ; TODO complete me!
-  (utils/spy notes)
-  ""
-  )
+  (str "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
+       "<rss version=\"2.0\">"
+       "<channel>"
+       "<title>Cris Silva Jr.'s Notes</title>"
+       "<link>" url "</link>"
+       "<description>Notes from my personal digital garden</description>"
+       "<author>Cris Silva Jr.</author>"
+       "<lastBuildDate>" (LocalDateTime/now) "</lastBuildDate>"
+       (->> (map render-rss-entry notes)
+            (reduce str ""))
+       "</channel>"
+       "</rss>"
+       ))
 
 (defn generate [input-dir url output-path]
   (let [index (utils/load-index input-dir)
