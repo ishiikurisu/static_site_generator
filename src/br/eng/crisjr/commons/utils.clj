@@ -9,13 +9,19 @@
       slurp
       json/read-str))
 
+(defn- maybe-slurp [path]
+  (try
+    (slurp path)
+    (catch Exception e
+      nil)))
+
 (defn load-templates [pwd]
   {:index (-> (str pwd "/index.template.html")
               slurp)
    :index-post (-> (str pwd "/index.post.template.html")
                    slurp)
    :post (-> (str pwd "/post.template.html")
-             slurp)})
+             maybe-slurp)})
 
 (defn load-post [pwd path]
   (-> (str pwd "/" path)

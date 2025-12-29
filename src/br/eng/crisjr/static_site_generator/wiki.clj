@@ -16,7 +16,7 @@
 (defn- render-note [template note input-dir output-dir]
   (try
     (do
-      (spit (str output-dir "/" (-> (get "path" note)
+      (spit (str output-dir "/" (-> (get note "path")
                                     utils/get-new-path))
             (generate-note-content template input-dir note))
       true)
