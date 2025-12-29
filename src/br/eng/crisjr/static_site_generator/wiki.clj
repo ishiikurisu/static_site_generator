@@ -3,6 +3,11 @@
             [br.bsb.liberdade.strint :refer [strint]]
             [br.eng.crisjr.commons.utils :as utils]))
 
+(def lang-tags {nil     ""
+                "pt-br" "🇧🇷"
+                "en"    "🇬🇧"
+                "ja"    "🇯🇵"})
+
 (defn- populate-template-content [template content]
   (strint template {"content" content}))
 
@@ -40,7 +45,11 @@
 (defn- populate-index-post-template [template note]
   (strint template
           {"path" (utils/get-new-path (get note "path"))
-           "title" (get note "title")}))
+           "title" (get note "title")
+           "description" (get note "description")
+           "dateLabel" (utils/build-date-label note)
+           "language" (->> (get note "lang")
+                           (get lang-tags))}))
 
 (defn- build-index-contents [template notes]
   (->> (map #(populate-index-post-template template %) notes)

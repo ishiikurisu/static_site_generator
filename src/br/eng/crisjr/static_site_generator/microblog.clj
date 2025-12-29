@@ -8,7 +8,8 @@
     (strint template
             {"title" (get entry "title")
              "content" (apply (utils/get-render-fn path)
-                              [(utils/load-post input-repository path)])})))
+                              [(utils/load-post input-repository path)])
+             "dateLabel" (utils/build-date-label entry)})))
 
 (defn generate [input-repository templates-directory output-file]
   (let [index (utils/load-index input-repository)

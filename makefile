@@ -3,19 +3,19 @@ default: build
 
 .PHONY: build
 build: test
-	echo "TODO"]
+	lein uberjar
 
 .PHONY: clean
 clean:
-	echo "TODO"
+	git clean -xdf
 
 .PHONY: test
 test:
 	lein test
 
 .PHONY: publish
-publish:
-	echo "TODO"
+publish: build
+	cp target/uberjar/*-standalone.jar ssg.jar
 
 .PHONY: repl
 repl:

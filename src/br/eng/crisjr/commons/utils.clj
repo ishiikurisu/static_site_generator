@@ -67,6 +67,20 @@
 (defn get-new-path [from]
   (str/replace from #"\.md|\.csv$" ".html"))
 
+(defn- format-date-for-label [date]
+  (first (str/split date #"T")))
+
+(defn build-date-label [note]
+  (let [creation-date (get note "original_date" (get note "creation_date"))
+        last-updated-date (get note "last_updated_date")
+        creation-tag (str "🆕 " (format-date-for-label creation-date))
+        update-tag (if (nil? last-updated-date)
+                     ""
+                     (str " ➕ " (format-date-for-label last-updated-date)))]
+    (str creation-tag update-tag)))
+
+
+
 (defn spy [it]
   (clojure.pprint/pprint it)
   it)
