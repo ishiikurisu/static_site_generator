@@ -15,8 +15,9 @@
   (let [path (get note "path")
         post (utils/load-post input-dir path)
         render-fn (utils/get-render-fn path)]
-    (->> (render-fn post)
-         (populate-template-content template))))
+    (when-not (str/ends-with? path ".geojson")  ; HACK avoid geojson for now
+      (->> (render-fn post)
+           (populate-template-content template)))))
 
 (defn- render-note [template note input-dir output-dir]
   (try
