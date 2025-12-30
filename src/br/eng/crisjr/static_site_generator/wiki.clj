@@ -49,7 +49,7 @@
            "title" (get note "title")
            "description" (get note "description")
            "dateLabel" (utils/build-date-label note)
-           "language" (->> (get note "lang")
+           "language" (->> (get note "language")
                            (get lang-tags))}))
 
 (defn- build-index-contents [template notes]
