@@ -30,12 +30,19 @@
     (.format DateTimeFormatter/RFC_1123_DATE_TIME zoned-date-time)))
 
 (defn- render-rss-entry [note]
-  (str "<item>"
-       "<title>" (get note "title") "</title>"
-       "<link>" (get note "path") "</link>"
-       "<description>" (get note "content") "</description>"
-       "<pubDate>" (to-rfc-1123 (get note "last_updated_date")) "</pubDate>"
-       "</item>"))
+  (let [pub-date (-> (or (get note "last_updated_date")
+                         (get note "creation_date")
+                         (get note "original_date")
+                         (-> (.toString (ZonedDateTime/now))
+                             (str/split #"\[")
+                             first))
+                     to-rfc-1123)]
+    (str "<item>"
+         "<title>" (get note "title") "</title>"
+         "<link>" (get note "path") "</link>"
+         "<description>" (get note "content") "</description>"
+         "<pubDate>" pub-date "</pubDate>"
+         "</item>")))
 
 (defn- build-feed [url notes]
   (str "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
