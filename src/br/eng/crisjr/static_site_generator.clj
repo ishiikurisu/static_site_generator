@@ -57,9 +57,9 @@
 (defn -main [& argv]
   (let [args (cli/parse argv)
         tool (get args "tool" "")]
-    (cond
-      (= tool "wiki") (run-wiki args)
-      (= tool "rss") (run-rss args)
-      (= tool "microblog") (run-microblog args)
+    (condp = tool
+      "wiki" (run-wiki args)
+      "rss" (run-rss args)
+      "microblog" (run-microblog args)
       :else (println (str "Unknown command " tool)))))
 

@@ -21,10 +21,10 @@
 
 (defn- render-note [template note input-dir output-dir]
   (try
-    (do
-      (spit (str output-dir "/" (-> (get note "path")
-                                    utils/get-new-path))
-            (generate-note-content template input-dir note))
+    (let [path (get note "path")]
+      (when-not (str/ends-with? path ".geojson")  ; HACK avoid geojson
+        (spit (str output-dir "/" (utils/get-new-path path))
+              (generate-note-content template input-dir note)))
       true)
     (catch Exception e
       (do

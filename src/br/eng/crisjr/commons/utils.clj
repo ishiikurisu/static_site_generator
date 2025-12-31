@@ -65,7 +65,9 @@
     :else identity))
 
 (defn get-new-path [from]
-  (str/replace from #"\.md|\.csv$" ".html"))
+  (if (str/ends-with? from ".geojson")
+    from
+    (str/replace from #"\.md|\.csv$" ".html")))
 
 (defn- format-date-for-label [date]
   (first (str/split date #"T")))
