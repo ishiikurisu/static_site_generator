@@ -23,6 +23,12 @@
                        templates-directory
                        output-directory))))
 
+(def wiki-help (str "# wiki: renders each file separately\n\n"
+                    "-i input directory\n"
+                    "-t template directory\n"
+                    "-o output directory (default: \".\")\n"
+                    "\n"))
+
 ; args:
 ;     -i input repository 
 ;     -o output file (default: "./feed.rss")
@@ -35,6 +41,12 @@
       (nil? input-repository) (println "Error: no input repository set")
       (nil? url) (println "Error: no URL set")
       :else (rss/generate input-repository url output-file))))
+
+(def rss-help (str "# rss: generates an RSS file\n\n"
+                   "-i input repository\n"
+                   "-u reference URL\n"
+                   "-o RSS feed file (default: \"./feed.rss\")\n"
+                   "\n"))
 
 ; args:
 ;     -i input directory
@@ -54,6 +66,20 @@
                             templates-directory
                             output-file))))
 
+(def microblog-help (str "# microblog: renders all notes in a single file\n\n"
+                         "-i input repository\n"
+                         "-t templates directory\n"
+                         "-o output file (default: \"./index.html\")\n"
+                         "\n"))
+
+; help
+;    no args accepted
+(defn- run-help [args]
+  (let [tools [wiki-help
+               rss-help
+               microblog-help]]
+    (println (reduce str "" tools))))
+
 (defn -main [& argv]
   (let [args (cli/parse argv)
         tool (get args "tool" "")]
@@ -61,5 +87,5 @@
       "wiki" (run-wiki args)
       "rss" (run-rss args)
       "microblog" (run-microblog args)
-      :else (println (str "Unknown command " tool)))))
+      (run-help args))))
 

@@ -4,52 +4,34 @@ My personal static site generator. It is an evolution of
 [Liberdade's Github Local Blog](https://github.com/liberdade-organizacao/github-local-blog).
 
 
-
 ## Build
 
 ```
-make
+make publish
 ```
 
-This will generate a `build_notes.exe` executable.
-
+This will generate a `ssg.jar` jarfile that can be executed.
 
 
 ## Usage
 
-Command line options:
+### Tools
 
-```
-./build_notes.exe <input_folder> <output_folder>
-```
+The following tools are available:
 
-During usage, the application expects a `template` folder in the same
-directory of usage containing the template files.
+- `wiki`
+- `rss`
+- `microblog`
+- `help`
 
-The input folder should contain an `index.blog.json` file listing all files
-that should be included in the site.
+They should accept the following parameters:
 
-The output folder will contain:
+- `-i`: input repository
+- `-u`: reference URL
+- `-t`: folder with template files
+- `-o`: output path
 
-- The generated files, including an index one
-- An RSS feed file listing files based on date of last updated, limited to
-  the last 20 updates
-
-
-### Template file format
-
-The static site generator expects 3 template files:
-
-- `index.template.html`
-  - Main page of the static site
-  - The `content` handlebar will be filled using the contents of 
-    `index.post.template.html` using the data listed on `index.blog.json`
-- `index.post.template.html`
-  - Entry for each post, as listed on the index page
-  - To be filled with information from `index.blog.json`
-- `post.template.html`
-  - Page for each post on the static site
-  - One page for each entry on `index.blog.json`
+### Example Templates
 
 Basic `index.template.html`:
 
