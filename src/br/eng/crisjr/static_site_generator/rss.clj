@@ -44,13 +44,13 @@
          "<pubDate>" pub-date "</pubDate>"
          "</item>")))
 
-(defn- build-feed [url notes]
+(defn- build-feed [feed-title description url notes]
   (str "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
        "<rss version=\"2.0\">"
        "<channel>"
-       "<title>Cris Silva Jr.'s Notes</title>"
+       "<title>" feed-title "</title>"
        "<link>" url "</link>"
-       "<description>Notes from my personal digital garden</description>"
+       "<description>" description "</description>"
        "<lastBuildDate>"
          (-> (.toString (ZonedDateTime/now))
              (str/split #"\[")
@@ -62,9 +62,9 @@
        "</channel>"
        "</rss>"))
 
-(defn generate [input-dir url output-path]
+(defn generate [input-dir feed-title description url output-path]
   (let [index (utils/load-index input-dir)
         notes (mapv #(load-note input-dir url %) index)]
-    (->> (build-feed url notes)
+    (->> (build-feed feed-title description url notes)
          (spit output-path))))
 

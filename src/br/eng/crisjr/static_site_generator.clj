@@ -32,19 +32,29 @@
 ; args:
 ;     -i input repository 
 ;     -o output file (default: "./feed.rss")
+;     -h feed title (default: "RSS Feed")
+;     -d description (default: "")
 ;     -u url
 (defn- run-rss [args]
   (let [input-repository (get args "-i")
         output-file (get args "-o" "./feed.rss")
+        feed-title (get args "-h" "RSS Feed")
+        description (get args "-d" "")
         url (get args "-u")]
     (cond
       (nil? input-repository) (println "Error: no input repository set")
       (nil? url) (println "Error: no URL set")
-      :else (rss/generate input-repository url output-file))))
+      :else (rss/generate input-repository
+                          feed-title
+                          description
+                          url
+                          output-file))))
 
 (def rss-help (str "# rss: generates an RSS file\n\n"
                    "-i input repository\n"
                    "-u reference URL\n"
+                   "-h RSS feed title (default: \"RSS Feed\")\n"
+                   "-d Description (default: \"\")\n"
                    "-o RSS feed file (default: \"./feed.rss\")\n"
                    "\n"))
 
