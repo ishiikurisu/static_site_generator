@@ -27,3 +27,40 @@
     (is (= "file.png" (utils/get-new-path "file.png")))
     (is (= "file.jpg" (utils/get-new-path "file.jpg")))))
 
+(deftest test-date-label
+  (testing "only creation date"
+    (let [note {"creation_date" "2025-06-04T11:27:17.000Z"}
+          expected-result "🆕 2025-06-04"]
+      (is (= expected-result (utils/build-date-label note)))))
+  (testing "different creation date and last updated date"
+    (let [note {"creation_date"     "2025-06-04T11:27:17.000Z"
+                "last_updated_date" "2026-06-04T11:27:17.000Z"}
+          expected-result "🆕 2025-06-04 ➕ 2026-06-04"]
+      (is (= expected-result (utils/build-date-label note)))))
+  (testing "same creation date and last updated date"
+    (let [note {"creation_date"     "2025-06-04T11:27:17.000Z"
+                "last_updated_date" "2025-06-04T12:27:17.000Z"}
+          expected-result "🆕 2025-06-04"]
+      (is (= expected-result (utils/build-date-label note)))))
+  (testing "only original date"
+    (let [note {"original_date" "2025-06-04T11:27:17.000Z"}
+          expected-result "🆕 2025-06-04"]
+      (is (= expected-result (utils/build-date-label note)))))
+  (testing "original date and creation date"
+    (let [note {"creation_date" "2026-06-04T11:27:17.000Z"
+                "original_date" "2025-06-04T12:27:17.000Z"}
+          expected-result "🆕 2025-06-04"]
+      (is (= expected-result (utils/build-date-label note)))))
+  (testing "original date, creation date, and last updated date"
+    (let [note {"last_updated_date" "2027-06-04T11:27:17.000Z"
+                "creation_date"     "2026-06-04T11:27:17.000Z"
+                "original_date"     "2025-06-04T12:27:17.000Z"}
+          expected-result "🆕 2025-06-04 ➕ 2027-06-04"]
+      (is (= expected-result (utils/build-date-label note)))))
+  (testing "same original date, creation date, and last updated date"
+    (let [note {"last_updated_date" "2025-06-04T14:27:17.000Z"
+                "creation_date"     "2025-06-04T13:27:17.000Z"
+                "original_date"     "2025-06-04T12:27:17.000Z"}
+          expected-result "🆕 2025-06-04"]
+      (is (= expected-result (utils/build-date-label note))))))
+

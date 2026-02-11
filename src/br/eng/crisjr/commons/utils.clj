@@ -75,13 +75,15 @@
 (defn build-date-label [note]
   (let [creation-date (get note "original_date" (get note "creation_date"))
         last-updated-date (get note "last_updated_date")
-        creation-tag (str "🆕 " (format-date-for-label creation-date))
-        update-tag (if (nil? last-updated-date)
+        formatted-creation-date (format-date-for-label creation-date)
+        creation-tag (str "🆕 " formatted-creation-date)
+        formatted-update-date (when (some? last-updated-date)
+                                (format-date-for-label last-updated-date))
+        update-tag (if (or (nil? formatted-update-date)
+                           (= formatted-creation-date formatted-update-date))
                      ""
-                     (str " ➕ " (format-date-for-label last-updated-date)))]
+                     (str " ➕ " formatted-update-date))]
     (str creation-tag update-tag)))
-
-
 
 (defn spy [it]
   (clojure.pprint/pprint it)
