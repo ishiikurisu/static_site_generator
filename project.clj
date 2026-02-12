@@ -1,4 +1,4 @@
-(defproject br.eng.crisjr.static_site_generator "0.3.2"
+(defproject br.eng.crisjr.static_site_generator "0.3.3"
   :description "Static Site Generator"
   :url "https://www.crisjr.eng.br/notes"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
